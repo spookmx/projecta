@@ -1,13 +1,23 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
+
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import AppBar from 'material-ui/AppBar';
+
+import { Router, Route } from 'react-router';
+import createBrowserHistory from 'history/createBrowserHistory';
+
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 
 import { Tasks } from '../api/tasks.js';
 
-import Task from './Task.jsx';
+import ViewMain from './ViewMain.jsx';
+import ViewRegister from './ViewRegister.jsx';
+
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
+
+const browserHistory = createBrowserHistory();
 
 // App component - represents the whole app
 class App extends Component {
@@ -15,85 +25,25 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      hideCompleted: false,
-    };
   }
 
-
-  handleSubmit(event) {
-    event.preventDefault();
-
-    // Find the text field via the React ref
-    const text = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
-
-    Meteor.call('tasks.insert', text);
-
-    // Clear form
-    ReactDOM.findDOMNode(this.refs.textInput).value = '';
-  }
-
-  toggleHideCompleted() {
-    this.setState({
-      hideCompleted: !this.state.hideCompleted,
-    });
-  }
-
-  renderTasks() {
-    let filteredTasks = this.props.tasks;
-    if (this.state.hideCompleted) {
-      filteredTasks = filteredTasks.filter(task => !task.checked);
-    }
-    return filteredTasks.map((task) => {
-      const currentUserId = this.props.currentUser && this.props.currentUser._id;
-      const showPrivateButton = task.owner === currentUserId;
-
-      return (
-        <Task
-          key={task._id}
-          task={task}
-          showPrivateButton={showPrivateButton}
-        />
-      );
-    });
-  }
 
   render() {
     return (
-      <MuiThemeProvider>
-        <div className="container">
-          <header>
-            <h1>Todo List ({this.props.incompleteCount})</h1>
-
-            <label className="hide-completed">
-              <input
-                type="checkbox"
-                readOnly
-                checked={this.state.hideCompleted}
-                onClick={this.toggleHideCompleted.bind(this)}
-              />
-              Hide Completed Tasks
-            </label>
-
-            <AccountsUIWrapper />
-
-            { this.props.currentUser ?
-              <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
-                <input
-                  type="text"
-                  ref="textInput"
-                  placeholder="Type to add new tasks"
-                />
-              </form> : ''
-            }
-          </header>
-
-          <ul>
-            {this.renderTasks()}
-          </ul>
-        </div>
-      </MuiThemeProvider>
-
+      <Router history={browserHistory}>
+        <MuiThemeProvider>
+          <div className="mainWrapper">
+            <AppBar
+              title="Title"
+              iconClassNameRight="muidocs-icon-navigation-expand-more"
+            />
+            <div>
+              <Route exact path="/" component={ViewMain}/>
+              <Route path="/register" component={ViewRegister}/>
+            </div>
+          </div>
+        </MuiThemeProvider>
+      </Router>
     );
   }
 }
