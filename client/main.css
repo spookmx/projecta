@@ -1,16 +1,17 @@
-/* CSS declarations go here */
-/* CSS declarations go here */
-body {
-  font-family: sans-serif;
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
 
+body {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-
   padding: 0;
   margin: 0;
+}
 
-  font-size: 14px;
+.contentWrapper{
+  padding: 2em;
 }

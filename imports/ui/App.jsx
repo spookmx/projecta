@@ -2,7 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import AppBar from 'material-ui/AppBar';
+import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar';
+import RaisedButton from 'material-ui/RaisedButton';
 
 import { Router, Route } from 'react-router';
 import createBrowserHistory from 'history/createBrowserHistory';
@@ -12,7 +13,7 @@ import { createContainer } from 'meteor/react-meteor-data';
 
 import { Tasks } from '../api/tasks.js';
 
-import ViewMain from './ViewMain.jsx';
+import ViewHome from './ViewHome.jsx';
 import ViewRegister from './ViewRegister.jsx';
 
 import AccountsUIWrapper from './AccountsUIWrapper.jsx';
@@ -33,14 +34,18 @@ class App extends Component {
       <Router history={browserHistory}>
         <MuiThemeProvider>
           <div className="mainWrapper">
-            <AppBar
-              title="Title"
-              iconClassNameRight="muidocs-icon-navigation-expand-more"
-            />
-            <div>
-              <Route exact path="/" component={ViewMain}/>
-              <Route path="/register" component={ViewRegister}/>
-            </div>
+            <Toolbar>
+              <ToolbarGroup firstChild={true}>
+                <ToolbarTitle text="Fluity" />
+              </ToolbarGroup>
+              <ToolbarGroup>
+                <RaisedButton label="Register" primary={true} />
+              </ToolbarGroup>
+            </Toolbar>
+          <div className="contentWrapper">
+            <Route exact path="/" component={ViewHome}/>
+            <Route path="/register" component={ViewRegister}/>
+          </div>
           </div>
         </MuiThemeProvider>
       </Router>
